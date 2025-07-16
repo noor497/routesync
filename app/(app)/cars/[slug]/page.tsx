@@ -17,7 +17,7 @@ import { ReserveCard } from "./components/reserve-card"
 export async function generateMetadata({
   params,
 }: CarDetailsPageProps): Promise<Metadata> {
-  const car = await getCarBySlug(params.slug)
+  const car: any = await getCarBySlug(params.slug)
 
   if (!car) return {}
 
@@ -37,7 +37,7 @@ interface CarDetailsPageProps {
 }
 
 export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
-  const car = await getCarBySlug(params.slug)
+  const car: any = await getCarBySlug(params.slug)
 
   if (!car) {
     notFound()
