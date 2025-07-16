@@ -1,5 +1,5 @@
-import { getCars } from "@/db/queries/car-repository"
-
+"use client"
+import { useEffect, useState } from "react"
 import { SearchParams } from "@/lib/types"
 import { slugify } from "@/lib/utils"
 
@@ -16,8 +16,28 @@ interface CarCatalogProps {
   }
 }
 
-export default async function CarCatalog({ searchParams }: CarCatalogProps) {
-  const cars = await getCars()
+export default function CarCatalog({ searchParams }: CarCatalogProps) {
+  const [cars, setCars] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchCars() {
+      setLoading(true)
+      setError(null)
+      try {
+        const res = await fetch("/api/cars")
+        if (!res.ok) throw new Error("Failed to fetch cars")
+        const data = await res.json()
+        setCars(data)
+      } catch (err) {
+        setError("Failed to fetch cars")
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchCars()
+  }, [])
 
   const {
     [SearchParams.MIN_PRICE]: minPrice,
@@ -39,6 +59,12 @@ export default async function CarCatalog({ searchParams }: CarCatalogProps) {
     )
   })
 
+  if (loading) {
+    return <div>Loading cars...</div>
+  }
+  if (error) {
+    return <div>{error}</div>
+  }
   if (!filteredCars.length)
     return (
       <div className="col-span-full text-balance">
