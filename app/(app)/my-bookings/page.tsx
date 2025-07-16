@@ -26,29 +26,29 @@ export default async function MyBookingsPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">My Bookings</h1>
+      <h1 className="mb-6 text-2xl font-bold ">My Bookings</h1>
       {bookings.length === 0 ? (
         <div>No bookings found.</div>
       ) : (
-        <div className="overflow-x-auto mb-12">
+        <div className="mb-12 overflow-x-auto ">
           <table className="min-w-full border border-gray-200">
             <thead>
               <tr className="bg-gray-100">
-                <th className="px-4 py-2 border">Car</th>
-                <th className="px-4 py-2 border">Check-in</th>
-                <th className="px-4 py-2 border">Check-out</th>
-                <th className="px-4 py-2 border">Total Price</th>
-                <th className="px-4 py-2 border">Status</th>
+                <th className="border px-4 py-2 ">Car</th>
+                <th className="border px-4 py-2">Check-in</th>
+                <th className="border px-4 py-2">Check-out</th>
+                <th className="border px-4 py-2">Total Price</th>
+                <th className="border px-4 py-2">Status</th>
               </tr>
             </thead>
             <tbody>
               {bookings.map((booking: any) => (
                 <tr key={booking._id} className="border-t">
-                  <td className="px-4 py-2 border">{booking.car?.name || "-"}</td>
-                  <td className="px-4 py-2 border">{new Date(booking.checkin).toLocaleDateString()}</td>
-                  <td className="px-4 py-2 border">{new Date(booking.checkout).toLocaleDateString()}</td>
-                  <td className="px-4 py-2 border">${booking.totalPrice.toFixed(2)}</td>
-                  <td className="px-4 py-2 border">{booking.status}</td>
+                  <td className="border px-4 py-2">{booking.car?.name || "-"}</td>
+                  <td className="border px-4 py-2">{new Date(booking.checkin).toLocaleDateString()}</td>
+                  <td className="border px-4 py-2">{new Date(booking.checkout).toLocaleDateString()}</td>
+                  <td className="border px-4 py-2">${booking.totalPrice.toFixed(2)}</td>
+                  <td className="border px-4 py-2">{booking.status}</td>
                 </tr>
               ))}
             </tbody>
@@ -56,7 +56,7 @@ export default async function MyBookingsPage() {
         </div>
       )}
 
-      <h2 className="text-xl font-bold mb-4">Bookings on My Cars</h2>
+      <h2 className=" mb-4 text-xl font-bold">Bookings on My Cars</h2>
       {bookingsOnMyCars.length === 0 ? (
         <div>No bookings by other users on your cars.</div>
       ) : (
@@ -64,23 +64,23 @@ export default async function MyBookingsPage() {
           <table className="min-w-full border border-gray-200">
             <thead>
               <tr className="bg-gray-100">
-                <th className="px-4 py-2 border">Car</th>
-                <th className="px-4 py-2 border">Renter</th>
-                <th className="px-4 py-2 border">Check-in</th>
-                <th className="px-4 py-2 border">Check-out</th>
-                <th className="px-4 py-2 border">Total Price</th>
-                <th className="px-4 py-2 border">Status</th>
+                <th className="border px-4 py-2">Car</th>
+                <th className="border px-4 py-2">Renter</th>
+                <th className="border px-4 py-2">Check-in</th>
+                <th className="border px-4 py-2">Check-out</th>
+                <th className="border px-4 py-2">Total Price</th>
+                <th className="border px-4 py-2">Status</th>
               </tr>
             </thead>
             <tbody>
               {bookingsOnMyCars.map((booking: any) => (
                 <tr key={booking._id} className="border-t">
-                  <td className="px-4 py-2 border">{booking.car?.name || "-"}</td>
-                  <td className="px-4 py-2 border">{booking.user?.email || "-"}</td>
-                  <td className="px-4 py-2 border">{new Date(booking.checkin).toLocaleDateString()}</td>
-                  <td className="px-4 py-2 border">{new Date(booking.checkout).toLocaleDateString()}</td>
-                  <td className="px-4 py-2 border">${booking.totalPrice.toFixed(2)}</td>
-                  <td className="px-4 py-2 border">{booking.status}</td>
+                  <td className="border px-4 py-2">{booking.car?.name || "-"}</td>
+                  <td className="border px-4 py-2">{booking.user?.email || "-"}</td>
+                  <td className="border px-4 py-2">{new Date(booking.checkin).toLocaleDateString()}</td>
+                  <td className="border px-4 py-2">{new Date(booking.checkout).toLocaleDateString()}</td>
+                  <td className="border px-4 py-2">${booking.totalPrice.toFixed(2)}</td>
+                  <td className="border px-4 py-2">{booking.status}</td>
                 </tr>
               ))}
             </tbody>

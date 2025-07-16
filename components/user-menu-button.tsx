@@ -17,8 +17,7 @@ export function UserMenuButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="w-9 h-9 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer text-lg font-bold">
-          {initials}
+      <div className="  flex   size-9  cursor-pointer  items-center  justify-center    rounded-full   bg-gray-300  text-lg font-bold ">          {initials}
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">

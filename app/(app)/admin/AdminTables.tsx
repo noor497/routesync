@@ -107,7 +107,7 @@ export default function AdminTables({ cars, bookings }: { cars: any[]; bookings:
           </DialogHeader>
           <form onSubmit={handleUpdateCar} className="space-y-4">
             <div>
-              <label className="block mb-1 font-medium">Vehicle Type</label>
+              <label className="mb-1 block font-medium ">Vehicle Type</label>
               <select
                 name="type"
                 value={carForm.type || ""}
@@ -122,15 +122,15 @@ export default function AdminTables({ cars, bookings }: { cars: any[]; bookings:
               </select>
             </div>
             <div>
-              <label className="block mb-1 font-medium">Car Name</label>
+              <label className="mb-1 block  font-medium">Car Name</label>
               <input name="name" value={carForm.name || ""} onChange={handleCarFormChange} required className="w-full rounded border px-3 py-2" />
             </div>
             <div>
-              <label className="block mb-1 font-medium">Number of Seats</label>
+              <label className="mb-1 block  font-medium">Number of Seats</label>
               <input name="seats" type="number" min="1" value={carForm.seats || ""} onChange={handleCarFormChange} required className="w-full rounded border px-3 py-2" />
             </div>
             <div>
-              <label className="block mb-1 font-medium">Powertrain</label>
+              <label className="mb-1 block  font-medium">Powertrain</label>
               <select
                 name="powertrain"
                 value={carForm.powertrain || ""}
@@ -145,7 +145,7 @@ export default function AdminTables({ cars, bookings }: { cars: any[]; bookings:
               </select>
             </div>
             <div>
-              <label className="block mb-1 font-medium">Transmission</label>
+              <label className="mb-1  block font-medium">Transmission</label>
               <select
                 name="transmission"
                 value={carForm.transmission || ""}
@@ -159,19 +159,19 @@ export default function AdminTables({ cars, bookings }: { cars: any[]; bookings:
               </select>
             </div>
             <div className="flex items-center gap-2">
-              <input name="unlimitedMileage" type="checkbox" checked={carForm.unlimitedMileage === true || carForm.unlimitedMileage === "true"} onChange={e => setCarForm(f => ({ ...f, unlimitedMileage: e.target.checked }))} id="unlimitedMileage" />
+              <input name="unlimitedMileage" type="checkbox" checked={carForm.unlimitedMileage === true || carForm.unlimitedMileage === "true"} onChange={e => setCarForm((f: any) => ({ ...f, unlimitedMileage: e.target.checked }))} id="unlimitedMileage" />
               <label htmlFor="unlimitedMileage" className="font-medium">Unlimited Mileage</label>
             </div>
             <div>
-              <label className="block mb-1 font-medium">Description</label>
+              <label className="mb-1 block  font-medium">Description</label>
               <textarea name="description" value={carForm.description || ""} onChange={handleCarFormChange} required className="w-full rounded border px-3 py-2" />
             </div>
             <div>
-              <label className="block mb-1 font-medium">Features <span className="text-xs text-gray-500">(comma separated)</span></label>
+              <label className="mb-1 block  font-medium">Features <span className="text-xs text-gray-500">(comma separated)</span></label>
               <input name="features" value={carForm.features || ""} onChange={handleCarFormChange} className="w-full rounded border px-3 py-2" />
             </div>
             <div>
-              <label className="block mb-1 font-medium">Price Per Day (USD)</label>
+              <label className="mb-1 block font-medium">Price Per Day (USD)</label>
               <input
                 name="pricePerDay"
                 type="number"
@@ -183,7 +183,7 @@ export default function AdminTables({ cars, bookings }: { cars: any[]; bookings:
               />
             </div>
             <div>
-              <label className="block mb-1 font-medium">Status</label>
+              <label className="mb-1 block  font-medium">Status</label>
               <select name="status" value={carForm.status || "active"} onChange={handleCarFormChange} className="w-full rounded border px-3 py-2">
                 <option value="active">Active</option>
                 <option value="disabled">Disabled</option>
@@ -191,9 +191,9 @@ export default function AdminTables({ cars, bookings }: { cars: any[]; bookings:
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <button type="button" className="px-4 py-2 rounded bg-gray-200">Cancel</button>
+                <button type="button" className="rounded bg-gray-200 px-4 py-2  ">Cancel</button>
               </DialogClose>
-              <button type="submit" className="px-4 py-2 rounded bg-blue-600 text-white" disabled={isPending}>
+              <button type="submit" className=" rounded  bg-blue-600   px-4  py-2 text-white" disabled={isPending}>
                 {isPending ? "Updating..." : "Update"}
               </button>
             </DialogFooter>
@@ -208,19 +208,19 @@ export default function AdminTables({ cars, bookings }: { cars: any[]; bookings:
             <DialogTitle>Update Booking</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleUpdateBooking} className="space-y-4">
-            <input name="checkin" type="date" value={bookingForm.checkin || ""} onChange={handleBookingFormChange} className="w-full border p-2 rounded" required />
-            <input name="checkout" type="date" value={bookingForm.checkout || ""} onChange={handleBookingFormChange} className="w-full border p-2 rounded" required />
-            <input name="totalPrice" type="number" value={bookingForm.totalPrice || ""} onChange={handleBookingFormChange} className="w-full border p-2 rounded" required />
-            <select name="status" value={bookingForm.status || "confirmed"} onChange={handleBookingFormChange} className="w-full border p-2 rounded">
+            <input name="checkin" type="date" value={bookingForm.checkin || ""} onChange={handleBookingFormChange} className="w-full rounded border p-2 " required />
+            <input name="checkout" type="date" value={bookingForm.checkout || ""} onChange={handleBookingFormChange} className="w-full rounded border   p-2" required />
+            <input name="totalPrice" type="number" value={bookingForm.totalPrice || ""} onChange={handleBookingFormChange} className="w-full rounded border p-2 " required />
+            <select name="status" value={bookingForm.status || "confirmed"} onChange={handleBookingFormChange} className="w-full rounded border p-2 ">
               <option value="pending">Pending</option>
               <option value="confirmed">Confirmed</option>
               <option value="cancelled">Cancelled</option>
             </select>
             <DialogFooter>
               <DialogClose asChild>
-                <button type="button" className="px-4 py-2 rounded bg-gray-200">Cancel</button>
+                <button type="button" className=" rounded bg-gray-200 px-4 py-2">Cancel</button>
               </DialogClose>
-              <button type="submit" className="px-4 py-2 rounded bg-blue-600 text-white" disabled={isPending}>
+              <button type="submit" className=" rounded bg-blue-600 px-4 py-2 text-white " disabled={isPending}>
                 {isPending ? "Updating..." : "Update"}
               </button>
             </DialogFooter>
@@ -228,27 +228,27 @@ export default function AdminTables({ cars, bookings }: { cars: any[]; bookings:
         </DialogContent>
       </Dialog>
 
-      <h2 className="text-xl font-bold mb-4">All Cars</h2>
-      <div className="overflow-x-auto mb-12">
+      <h2 className="mb-4 text-xl  font-bold ">All Cars</h2>
+      <div className="mb-12 overflow-x-auto ">
         <table className="min-w-full border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
-              <th className="px-4 py-2 border">Name</th>
-              <th className="px-4 py-2 border">Owner</th>
-              <th className="px-4 py-2 border">Status</th>
-              <th className="px-4 py-2 border">Actions</th>
+              <th className="border px-4 py-2 ">Name</th>
+              <th className="border px-4 py-2 ">Owner</th>
+              <th className="border px-4 py-2 ">Status</th>
+              <th className="border px-4 py-2 ">Actions</th>
             </tr>
           </thead>
           <tbody>
             {cars.map((car: any) => (
               <tr key={car._id} className="border-t">
-                <td className="px-4 py-2 border">{car.name}</td>
-                <td className="px-4 py-2 border">{car.userEmail || "-"}</td>
-                <td className="px-4 py-2 border">{car.status}</td>
-                <td className="px-4 py-2 border">
+                <td className="border px-4 py-2 ">{car.name}</td>
+                <td className="border px-4 py-2 ">{car.userEmail || "-"}</td>
+                <td className="border px-4 py-2 ">{car.status}</td>
+                <td className="border px-4 py-2 ">
                   <Dialog>
                     <DialogTrigger asChild>
-                      <button className="text-red-600 hover:underline mr-2">Delete</button>
+                      <button className="mr-2 text-red-600 hover:underline ">Delete</button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
@@ -259,10 +259,10 @@ export default function AdminTables({ cars, bookings }: { cars: any[]; bookings:
                       </DialogHeader>
                       <DialogFooter>
                         <DialogClose asChild>
-                          <button className="px-4 py-2 rounded bg-gray-200">Cancel</button>
+                          <button className=" rounded bg-gray-200 px-4 py-2">Cancel</button>
                         </DialogClose>
                         <button
-                          className="px-4 py-2 rounded bg-red-600 text-white"
+                          className=" rounded  bg-red-600  px-4 py-2 text-white"
                           onClick={() => handleDeleteCar(car._id.toString())}
                           disabled={isPending}
                         >
@@ -284,33 +284,33 @@ export default function AdminTables({ cars, bookings }: { cars: any[]; bookings:
         </table>
       </div>
 
-      <h2 className="text-xl font-bold mb-4">All Bookings</h2>
+      <h2 className="mb-4 text-xl font-bold ">All Bookings</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
-              <th className="px-4 py-2 border">Car</th>
-              <th className="px-4 py-2 border">Renter</th>
-              <th className="px-4 py-2 border">Check-in</th>
-              <th className="px-4 py-2 border">Check-out</th>
-              <th className="px-4 py-2 border">Total Price</th>
-              <th className="px-4 py-2 border">Status</th>
-              <th className="px-4 py-2 border">Actions</th>
+              <th className="border px-4 py-2 ">Car</th>
+              <th className="border px-4 py-2 ">Renter</th>
+              <th className="border px-4 py-2 ">Check-in</th>
+              <th className="border px-4 py-2 ">Check-out</th>
+              <th className="border px-4 py-2 ">Total Price</th>
+              <th className="border px-4 py-2 ">Status</th>
+              <th className="border px-4 py-2 ">Actions</th>
             </tr>
           </thead>
           <tbody>
             {bookings.map((booking: any) => (
               <tr key={booking._id} className="border-t">
-                <td className="px-4 py-2 border">{booking.car?.name || "-"}</td>
-                <td className="px-4 py-2 border">{booking.user?.email || "-"}</td>
-                <td className="px-4 py-2 border">{new Date(booking.checkin).toLocaleDateString()}</td>
-                <td className="px-4 py-2 border">{new Date(booking.checkout).toLocaleDateString()}</td>
-                <td className="px-4 py-2 border">${booking.totalPrice.toFixed(2)}</td>
-                <td className="px-4 py-2 border">{booking.status}</td>
-                <td className="px-4 py-2 border">
+                <td className="border px-4 py-2 ">{booking.car?.name || "-"}</td>
+                <td className="border px-4 py-2 ">{booking.user?.email || "-"}</td>
+                <td className="border px-4 py-2 ">{new Date(booking.checkin).toLocaleDateString()}</td>
+                <td className="border px-4 py-2 ">{new Date(booking.checkout).toLocaleDateString()}</td>
+                <td className="border px-4 py-2 ">${booking.totalPrice.toFixed(2)}</td>
+                <td className="border px-4 py-2 ">{booking.status}</td>
+                <td className="border px-4 py-2 ">
                   <Dialog>
                     <DialogTrigger asChild>
-                      <button className="text-red-600 hover:underline mr-2">Delete</button>
+                      <button className=" mr-2 text-red-600  hover:underline">Delete</button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
@@ -321,10 +321,10 @@ export default function AdminTables({ cars, bookings }: { cars: any[]; bookings:
                       </DialogHeader>
                       <DialogFooter>
                         <DialogClose asChild>
-                          <button className="px-4 py-2 rounded bg-gray-200">Cancel</button>
+                          <button className=" rounded bg-gray-200 px-4 py-2">Cancel</button>
                         </DialogClose>
                         <button
-                          className="px-4 py-2 rounded bg-red-600 text-white"
+                          className=" rounded bg-red-600 px-4 py-2 text-white"
                           onClick={() => handleDeleteBooking(booking._id.toString())}
                           disabled={isPending}
                         >

@@ -41,11 +41,11 @@ export function SiteHeader() {
     <header className="flex h-full items-center justify-between">
       <LogoLink />
       <nav className="flex items-center gap-6">
-        <Link href="/" className="font-medium text-gray-700 hover:text-blue-600 transition">Home</Link>
-        <Link href="/cars" className="font-medium text-gray-700 hover:text-blue-600 transition">All Cars</Link>
+        <Link href="/" className="font-medium text-gray-700 transition hover:text-blue-600">Home</Link>
+        <Link href="/cars" className="font-medium text-gray-700 transition hover:text-blue-600">All Cars</Link>
         {/* Car Types Dropdown here if needed */}
         {isAdmin && (
-          <Link href="/admin" className="font-medium text-red-600 underline">Admin</Link>
+          <Link href="/admin" className="font-medium  text-red-600 underline transition ">Admin</Link>
         )}
       </nav>
       <div className="inline-flex items-center gap-4">
@@ -61,17 +61,17 @@ export function SiteHeader() {
               id="book-rent-switch"
             >
               <span
-                className={`absolute left-0.5 top-0.5 block h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ${isRent ? 'translate-x-4' : ''}`}
+                className={`absolute left-0.5 top-0.5 block size-5 rounded-full bg-white shadow transition-transform duration-200 ${isRent ? 'translate-x-4' : ''}`}
               />
             </button>
             <span className={isRent ? 'font-bold text-blue-600' : 'text-gray-500'}>Rent</span>
           </label>
           {isRent ? (
-            <Link href="/list-your-car" className="font-medium text-blue-600 underline">
+            <Link href="/list-your-car" className="font-medium  text-blue-600 underline transition">
               List Your Car
             </Link>
           ) : (
-            <Link href="/my-bookings" className="font-medium text-blue-600 underline">
+            <Link href="/my-bookings" className="font-medium  text-blue-600 underline transition">
               My Bookings
             </Link>
           )}
