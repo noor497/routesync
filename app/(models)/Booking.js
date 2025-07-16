@@ -1,5 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
+mongoose.connect(process.env.MONGODB_URI);
+mongoose.Promise = global.Promise;
 const bookingSchema = new Schema(
   {
     car: { type: Schema.Types.ObjectId, ref: "Car", required: true },

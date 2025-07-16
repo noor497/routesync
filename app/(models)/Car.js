@@ -1,4 +1,7 @@
-const mongoose = require('mongoose');
+import mongoose, { Schema } from "mongoose";
+
+mongoose.connect(process.env.MONGODB_URI);
+mongoose.Promise = global.Promise;
 
 const CarSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -18,4 +21,6 @@ const CarSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.models.Car || mongoose.model('Car', CarSchema); 
+
+ const Car =  mongoose.models.Car || mongoose.model('Car', CarSchema); 
+ export default Car;
