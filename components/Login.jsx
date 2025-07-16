@@ -147,7 +147,7 @@ const Login = () => {
           <label className="mr-1">Sign in with</label>
           <button
             type="button"
-            className="mx-1 h-9 w-9  rounded-full bg-red-600 hover:bg-red-700 text-white shadow-[0_4px_9px_-4px_#3b71ca]"
+            className="mx-1 size-9  rounded-full bg-red-600 hover:bg-red-700 text-white shadow-[0_4px_9px_-4px_#3b71ca]"
           >
             <BiLogoFacebook
               size={20}
@@ -156,7 +156,7 @@ const Login = () => {
           </button>
           <button
             type="button"
-            className="inlne-block mx-1 h-9 w-9 rounded-full bg-red-600 hover:bg-red-700 uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca]"
+            className="inline-block mx-1 size-9 rounded-full bg-red-600 hover:bg-red-700 uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca]"
           >
             <AiOutlineTwitter
               size={20}

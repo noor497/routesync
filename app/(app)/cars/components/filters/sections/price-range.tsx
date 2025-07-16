@@ -85,7 +85,7 @@ export function PriceRangeFilters({
     })
     setTempMinPrice(validatedMinPrice)
     setTempMaxPrice(validatedMaxPrice)
-  }, [debouncedMinPrice, debouncedMaxPrice])
+  }, [debouncedMinPrice, debouncedMaxPrice, MAX_PRICE, MIN_PRICE, tempMaxPrice, tempMinPrice, selectedFilters, setSelectedFilters])
 
   const handleMinPriceChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTempMinPrice(parseInt(e.target.value, 10) || MIN_PRICE)
