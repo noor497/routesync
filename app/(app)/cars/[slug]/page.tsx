@@ -196,7 +196,7 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
               </h2>
               <div className="pt-8">
                 <div className="grid grid-cols-2 gap-4">
-                  {car.features.map((feature) => (
+                  {car.features.map((feature: string) => (
                     <div
                       key={feature}
                       className="flex flex-row items-center gap-4"
