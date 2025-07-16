@@ -33,7 +33,7 @@ export default async function CarReservationPage({
   searchParams,
 }: CarReservationPageProps) {
   const { checkin, checkout } = searchParams
-  const car = await getCarBySlug(params.slug)
+  const car: any = await getCarBySlug(params.slug)
   const session = await getServerSession(options);
 
 
@@ -58,7 +58,7 @@ export default async function CarReservationPage({
 
   const subtotal = Number(car.pricePerDay) * days
   const taxes = subtotal * 0.16
-  const currency = car.currency || "USD"
+  const currency =  "USD"
 
   return (
     <>
