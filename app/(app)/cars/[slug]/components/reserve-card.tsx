@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/popover"
 
 interface ReserveCardProps {
-  car: SelectCar
+  car: any
 }
 
 export function ReserveCard({ car }: ReserveCardProps) {
@@ -64,7 +64,7 @@ export function ReserveCard({ car }: ReserveCardProps) {
       newParams.set(SearchParams.CHECKOUT, date?.to.toISOString())
     }
 
-    push(constructUrlWithParams(`/reservation/cars/${car.slug}`, newParams))
+    push(constructUrlWithParams(`/reservation/cars/${car._id}`, newParams))
   }
 
   return (
@@ -74,12 +74,8 @@ export function ReserveCard({ car }: ReserveCardProps) {
           <>
             <span className="block text-xl font-semibold tabular-nums">
               {differenceInDays(date.to, date.from) > 0
-                ? formatAmountForDisplay(
-                    Number(car.pricePerDay) *
-                      differenceInDays(date.to, date.from),
-                    car.currency
-                  )
-                : formatAmountForDisplay(Number(car.pricePerDay), car.currency)}
+                ? Number(car.pricePerDay) * differenceInDays(date.to, date.from)
+                : Number(car.pricePerDay)}
             </span>
             <span className="text-[14px] text-neutral-800">
               Total before taxes

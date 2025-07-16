@@ -31,11 +31,11 @@ export default function CarLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
         <div className="hidden md:block">
-          <div className="bg-[hsla(0,0%,100%,.8)] backdrop-blur-[5px] backdrop-saturate-[1.8]">
+          {/* <div className="bg-[hsla(0,0%,100%,.8)] backdrop-blur-[5px] backdrop-saturate-[1.8]">
             <div className="mx-auto h-[var(--site-header-height)] w-full max-w-none px-5 sm:max-w-[90%] sm:px-0 xl:max-w-6xl">
               <SiteHeader />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       {children}

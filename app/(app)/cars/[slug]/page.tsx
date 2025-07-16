@@ -1,11 +1,10 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getCarBySlug, getCars } from "@/db/queries/car-repository"
-import { getCldImageUrl } from "next-cloudinary"
+import Image from "next/image"
 
 import { convertImageUrlToDataUrl } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
-import CldImage from "@/components/cld-image"
 import { CheckIcon } from "@/components/icons/check"
 import { FilledStarIcon } from "@/components/icons/filled-star"
 import { HeadsetIcon } from "@/components/icons/headset"
@@ -44,18 +43,9 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
     notFound()
   }
 
-  const carInteriorUrl = getCldImageUrl({
-    src: "carhive/cars/car-interior_d6nmyn",
-    width: 100, // Resize the original file to a smaller size
-  })
-  const carDoorPanelUrl = getCldImageUrl({
-    src: "carhive/cars/car-door-panel_puxkbc",
-    width: 50,
-  })
-  const carSeatUrl = getCldImageUrl({
-    src: "carhive/cars/car-seat_rnzgv6",
-    width: 50,
-  })
+  const carInteriorUrl = car.imageUrls[0]
+  const carDoorPanelUrl = car.imageUrls[1]
+  const carSeatUrl = car.imageUrls[2]
 
   const [carInteriorDataUrl, carDoorPanelDataUrl, carSeatDataUrl] =
     await Promise.all([
@@ -81,73 +71,34 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
         <div className="md:pt-4">
           <div className="grid h-80 grid-cols-1 grid-rows-1 gap-3 md:h-[34rem] md:grid-cols-4 md:grid-rows-2">
             <div className="relative overflow-hidden md:col-span-3 md:row-span-2 md:rounded-l-2xl">
-              {carInteriorDataUrl ? (
-                <CldImage
-                  src={`carhive/cars/car-interior_d6nmyn`}
-                  alt="car interior"
-                  priority
-                  fill
-                  sizes="66vw"
-                  className="object-cover"
-                  placeholder="blur"
-                  blurDataURL={carInteriorDataUrl}
-                />
-              ) : (
-                <CldImage
-                  src={`carhive/cars/car-interior_d6nmyn`}
-                  alt="car interior"
-                  priority
-                  fill
-                  sizes="66vw"
-                  className="object-cover"
-                />
-              )}
+              <Image
+                src={car.imageUrls[0]}
+                alt="car interior"
+                priority
+                fill
+                sizes="66vw"
+                className="object-cover"
+              />
             </div>
             <div className="relative col-span-1 row-span-1 hidden overflow-hidden rounded-tr-2xl md:block">
-              {carDoorPanelDataUrl ? (
-                <CldImage
-                  src={`carhive/cars/car-door-panel_puxkbc`}
-                  alt="car door panel"
-                  priority
-                  fill
-                  sizes="33vw"
-                  className="object-cover"
-                  placeholder="blur"
-                  blurDataURL={carDoorPanelDataUrl}
-                />
-              ) : (
-                <CldImage
-                  src={`carhive/cars/car-door-panel_puxkbc`}
-                  alt="car door panel"
-                  priority
-                  fill
-                  sizes="33vw"
-                  className="object-cover"
-                />
-              )}
+              <Image
+                src={car.imageUrls[1]}
+                alt="car door panel"
+                priority
+                fill
+                sizes="33vw"
+                className="object-cover"
+              />
             </div>
             <div className="relative col-span-1 row-span-1 hidden overflow-hidden rounded-br-2xl md:block">
-              {carSeatDataUrl ? (
-                <CldImage
-                  src={`carhive/cars/car-seat_rnzgv6`}
-                  alt="car seat"
-                  priority
-                  fill
-                  sizes="33vw"
-                  className="object-cover"
-                  placeholder="blur"
-                  blurDataURL={carSeatDataUrl}
-                />
-              ) : (
-                <CldImage
-                  src={`carhive/cars/car-seat_rnzgv6`}
-                  alt="car seat"
-                  priority
-                  fill
-                  sizes="33vw"
-                  className="object-cover"
-                />
-              )}
+              <Image
+                src={car.imageUrls[2]}
+                alt="car seat"
+                priority
+                fill
+                sizes="33vw"
+                className="object-cover"
+              />
             </div>
           </div>
         </div>
@@ -174,7 +125,7 @@ export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
                 <div className="flex items-center gap-1 text-[15px] font-medium lg:text-[16px]">
                   <div className="flex items-center gap-1 ">
                     <FilledStarIcon className="inline-flex size-[15px] shrink-0" />
-                    <span className=" tabular-nums">{car.rating}</span>
+                    <span className=" tabular-nums">{car.rating || 0}</span>
                   </div>
                   <span className="text-xl">·</span>
                   {Number(car.reviewCount) > 0 && (

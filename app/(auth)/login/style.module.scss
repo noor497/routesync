@@ -1,0 +1,122 @@
+$primaryColor: #3751FE;
+$base: #0f0092;
+$baseDark:#07013d;
+
+
+.body {
+  background-color: rgb(223, 228, 226);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form {
+  background-color: white;
+  box-shadow: 0px 0px 60px 5px rgba(0, 0, 0, 0.4);
+}
+
+.btn{
+  background-color: $base;
+  color: #FFF;
+  line-height: 0px;
+  position: relative;
+  height: 30px;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 0px;
+  left: 30px;
+  
+}
+.spacer{
+background-color: transparent;
+width: 100%;
+height:10px;
+display: flex;
+// align-items: flex-end;
+justify-content: end;
+}
+.btn2{
+  background-color: $base;
+  color: #FFF;
+  font-size: 15px;
+  letter-spacing: 5px;
+  font-weight: 500;
+  line-height: 0px;
+  position: relative;
+  height: 50px;
+  width: 150px;
+  padding: 10px;
+  border-radius: 0px;
+  left: 40px;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  box-shadow: 0px 10px 20px 5px rgba(0, 0, 0, 0.4);
+ 
+}
+.btn2:hover{
+  background-color: $baseDark;
+}
+.btn_corner{
+  width: 0;
+  height: 0;
+  border-left: 0px solid  $base; /* Adjust width as needed */
+  border-right: 20px solid transparent; /* Adjust width as needed */
+  // border-bottom: 100px solid red; /* Adjust height and color as needed */
+  border-bottom: 15px solid  $base; /* Adjust height and color as needed */
+  position:relative;
+  top:-23px;
+  left:95px;
+}
+.btn_corner:hover{
+}
+.reset_btn{
+  color: $base;
+  font-size: 15px;
+  border-left: 2px solid $base;
+  border-bottom: 2px solid $base;
+}
+.reset_btn:hover{
+  background-color: $base;
+  color:#fff;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  padding:0px 5px 5px 5px;
+  letter-spacing: 3px;
+  transition: all .25s ease;
+}
+.links{
+  color: $baseDark;
+  font-size:small;
+  font-weight: 600;
+  text-decoration: wavy;
+}
+.google_button {
+  max-width: 320px;
+  margin-bottom: 20px;
+  display: flex;
+  padding: 0.5rem 1.4rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  vertical-align: middle;
+  align-items: center;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  gap: 0.75rem;
+  color: $baseDark;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all .6s ease;
+}
+
+.google_button svg {
+  height: 24px;
+}
+
+.google_button:hover {
+  transform: scale(1.02);
+}

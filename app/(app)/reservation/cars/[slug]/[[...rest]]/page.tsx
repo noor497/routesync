@@ -1,6 +1,5 @@
 import { Metadata } from "next"
 import { getCarBySlug } from "@/db/queries/car-repository"
-import { SignedIn, SignedOut } from "@clerk/nextjs"
 import { differenceInDays, isValid } from "date-fns"
 
 import { SearchParams } from "@/lib/types"
@@ -14,6 +13,8 @@ import { BookDetails } from "./components/book-details"
 import { CarDetails } from "./components/car-details"
 import { PaymentDetails } from "./components/payment-details"
 import { PriceDetails } from "./components/price-details"
+import { getServerSession } from "next-auth"
+import { options } from "@/app/api/auth/[...nextauth]/options" // adjust path as needed
 
 export const metadata: Metadata = {
   title: "Confirm and pay",
@@ -33,6 +34,8 @@ export default async function CarReservationPage({
 }: CarReservationPageProps) {
   const { checkin, checkout } = searchParams
   const car = await getCarBySlug(params.slug)
+  const session = await getServerSession(options);
+
 
   // Validate required fields
   if (!car) {
@@ -55,7 +58,7 @@ export default async function CarReservationPage({
 
   const subtotal = Number(car.pricePerDay) * days
   const taxes = subtotal * 0.16
-  const currency = car.currency
+  const currency = car.currency || "USD"
 
   return (
     <>
@@ -101,16 +104,19 @@ export default async function CarReservationPage({
               </div>
               <Separator className="my-3 h-[6px]" />
               <div className="px-5 py-3">
-                <SignedOut>
-                  <AuthSection />
-                </SignedOut>
-                <SignedIn>
-                  <PaymentDetails
-                    amount={subtotal + taxes}
-                    currency={currency}
-                  />
-                </SignedIn>
-              </div>
+        {!session ? (
+          <AuthSection />
+        ) : (
+          <PaymentDetails 
+            amount={subtotal + taxes} 
+            currency={currency} 
+            carId={car._id}
+            userId={session.user.id}
+            checkin={checkinDate.toISOString()}
+            checkout={checkoutDate.toISOString()}
+          />
+        )}
+      </div>
             </div>
           </main>
         </div>
@@ -131,7 +137,7 @@ export default async function CarReservationPage({
                   <ChevronLeftIcon className="size-5 shrink-0" />
                 </BackButton>
                 <h1 className="text-balance text-3xl font-semibold">
-                  Confirm and pay
+                  
                 </h1>
               </div>
               <div className="py-12">
@@ -142,15 +148,17 @@ export default async function CarReservationPage({
                       checkoutDate={checkoutDate}
                     />
                     <Separator className="my-7" />
-                    <SignedOut>
-                      <AuthSection />
-                    </SignedOut>
-                    <SignedIn>
-                      <PaymentDetails
-                        amount={subtotal + taxes}
-                        currency={currency}
-                      />
-                    </SignedIn>
+                    {!session ? (
+          <AuthSection />
+        ) : (
+<PaymentDetails 
+            amount={subtotal + taxes} 
+            currency={currency} 
+            carId={car._id}
+            userId={session.user.id}
+            checkin={checkinDate.toISOString()}
+            checkout={checkoutDate.toISOString()}
+          />        )}
                   </div>
                   <aside className="sticky top-[var(--site-header-height)] rounded-xl border">
                     <div className="p-6">

@@ -1,5 +1,5 @@
 import { siteConfig } from "@/config/site"
-
+import Link from "next/link"
 import { LogoLink } from "./logoLink"
 import { Button } from "./ui/button"
 
@@ -71,9 +71,9 @@ export function SiteFooter() {
                       className="h-auto text-balance rounded-none p-0 text-[13px] font-normal leading-none sm:text-sm"
                       asChild
                     >
-                      <a href={githubUrl} target="_blank" rel="noreferrer">
+                      <Link href={githubUrl} target="_blank" rel="noreferrer">
                         {link}
-                      </a>
+                      </Link>
                     </Button>
                   </li>
                 ))}
@@ -88,13 +88,13 @@ export function SiteFooter() {
                 className="h-auto rounded-none p-0 text-[13px] font-normal leading-none sm:text-sm"
                 asChild
               >
-                <a
+                <Link
                   href={siteConfig.author.url}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <strong>eduamdev</strong>
-                </a>
+                  <strong>Noor Devs</strong>
+                </Link>
               </Button>
               .
             </p>

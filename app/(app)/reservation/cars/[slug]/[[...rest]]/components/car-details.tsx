@@ -1,14 +1,14 @@
 import { SelectCar } from "@/db/schema"
 
-import CldImage from "@/components/cld-image"
+import Image from "next/image"
 import { FilledStarIcon } from "@/components/icons/filled-star"
 
-export function CarDetails({ car }: { car: SelectCar }) {
+export function CarDetails({ car }: { car: any }) {
   return (
     <div className="grid grid-cols-1 gap-5 min-[360px]:flex">
       <div className="relative aspect-square w-[100px] shrink-0">
-        <CldImage
-          src={car.imageUrl}
+        <Image
+          src={car.imageUrls[0] || car.imageUrl}
           alt={car.name}
           className="rounded-xl object-cover"
           fill

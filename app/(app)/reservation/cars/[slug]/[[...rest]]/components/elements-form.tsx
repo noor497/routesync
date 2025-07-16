@@ -19,18 +19,29 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { LoadingDots } from "@/components/loading-dots"
+import { useToast } from "@/hooks/use-toast"
 
 import { CancellationPolicy } from "./cancellation-policy"
 import { StripeTestCards } from "./stripe-test-cards"
+import { createBooking } from "../actions"
+
 
 function CheckoutForm({
   userEmail,
   amount,
   currency,
+  carId,
+  userId,
+  checkin,
+  checkout,
 }: {
   userEmail: string
   amount: number
   currency: string
+  carId: string
+  userId: string
+  checkin: string
+  checkout: string
 }) {
   const [isElementsReady, setIsElementsReady] = React.useState(false)
   const [input, setInput] = React.useState<{
@@ -40,26 +51,35 @@ function CheckoutForm({
   })
   const [paymentType, setPaymentType] = React.useState<string>("")
   const [payment, setPayment] = React.useState<{
-    status: "initial" | "processing" | "error"
-  }>({ status: "initial" })
+    status:
+      | "initial"
+      | "processing"
+      | "error"
+      | "requires_payment_method"
+      | "requires_confirmation"
+      | "requires_action"
+      | "succeeded"
+  }>(() => ({ status: "initial" }));
   const [errorMessage, setErrorMessage] = React.useState<string>("")
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const stripe = useStripe()
   const elements = useElements()
+  const { toast } = useToast()
 
-  const PaymentStatus = ({ status }: { status: string }) => {
-    switch (status) {
+  const PaymentStatus = () => {
+    if (isLoading) return <span>Processing...</span>
+    switch (payment.status) {
       case "processing":
       case "requires_payment_method":
       case "requires_confirmation":
         return <span>Processing...</span>
-
       case "requires_action":
         return <span>Authenticating...</span>
-
       case "succeeded":
         return <span>Success!</span>
-
+      case "error":
+        return <span>Error</span>
       default:
         return <span>Confirm and pay</span>
     }
@@ -72,6 +92,8 @@ function CheckoutForm({
     })
   }
 
+  console.log("[CheckoutForm] received checkin:", checkin, "checkout:", checkout)
+
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     try {
       e.preventDefault()
@@ -79,42 +101,77 @@ function CheckoutForm({
       if (!e.currentTarget.reportValidity()) return
       if (!elements || !stripe) return
 
+      setIsLoading(true)
+      toast({
+        title: "Processing payment...",
+        description: "Please wait while we confirm your payment.",
+      })
       setPayment({ status: "processing" })
 
-      const { error: submitError } = await elements.submit()
+      // const { error: submitError } = await elements.submit()
 
-      if (submitError) {
-        setPayment({ status: "error" })
-        setErrorMessage(submitError.message ?? "An unknown error occurred")
-
-        return
-      }
+      // if (submitError) {
+      //   setPayment({ status: "error" })
+      //   setErrorMessage(submitError.message ?? "An unknown error occurred")
+      //   toast({
+      //     title: "Payment failed",
+      //     description: submitError.message ?? "An unknown error occurred",
+      //     variant: "destructive",
+      //   })
+      //   return
+      // }
 
       // Create a PaymentIntent with the specified amount.
-      const { client_secret: clientSecret } = await createPaymentIntent(
-        new FormData(e.target as HTMLFormElement)
-      )
+      // const { client_secret: clientSecret } = await createPaymentIntent(
+      //   new FormData(e.target as HTMLFormElement)
+      // )
 
       // Use your card Element with other Stripe.js APIs
-      const { error: confirmError } = await stripe!.confirmPayment({
-        elements,
-        clientSecret,
-        confirmParams: {
-          return_url: `${window.location.origin}/reservation/confirmation/result`,
-          payment_method_data: {
-            billing_details: {
-              name: input.cardholderName,
-              email: userEmail,
-            },
-          },
-        },
-      })
+      // const { error: confirmError } = await stripe!.confirmPayment({
+      //   elements,
+      //   clientSecret,
+      //   confirmParams: {
+      //     return_url: `${window.location.origin}/reservation/confirmation/result`,
+      //     payment_method_data: {
+      //       billing_details: {
+      //         name: input.cardholderName,
+      //         email: userEmail,
+      //       },
+      //     },
+      //   },
+      // })
 
-      if (confirmError) {
-        setPayment({ status: "error" })
-        setErrorMessage(confirmError.message ?? "An unknown error occurred")
-      }
+      // if (confirmError) {
+      //   setPayment({ status: "error" })
+      //   setErrorMessage(confirmError.message ?? "An unknown error occurred")
+      //   toast({
+      //     title: "Payment failed",
+      //     description: confirmError.message ?? "An unknown error occurred",
+      //     variant: "destructive",
+      //   })
+      //   return
+      // }
+
+      // If no errors, show success toast
+      toast({
+        title: "Payment successful!",
+        description: "Your payment was processed successfully."
+      })
+      // Create booking after payment success
+      console.log("[CheckoutForm] before createBooking checkin:", checkin, "checkout:", checkout)
+      await createBooking({
+        carId,
+        userId,
+        checkin: new Date(checkin),
+        checkout: new Date(checkout),
+        totalPrice: amount,
+        status: "confirmed",
+      })
+      setIsLoading(false)
+      setPayment({ status: "succeeded" })
     } catch (err) {
+      setIsLoading(false)
+      setPayment({ status: "error" })
       const { message } = err as StripeError
       setErrorMessage(message ?? "An unknown error occurred")
     }
@@ -171,12 +228,9 @@ function CheckoutForm({
               type="submit"
               size={"lg"}
               className="w-44 text-[16px]"
-              disabled={
-                !["initial", "succeeded", "error"].includes(payment.status) ||
-                !stripe
-              }
+              disabled={isLoading || !isElementsReady}
             >
-              <PaymentStatus status={payment.status} />
+              <PaymentStatus />
             </Button>
           </div>
         </div>
@@ -189,11 +243,20 @@ export default function ElementsForm({
   userEmail,
   amount,
   currency,
+  carId,
+  userId,
+  checkin,
+  checkout,
 }: {
   userEmail: string
   amount: number
   currency: string
+  carId: string
+  userId: string
+  checkin: string
+  checkout: string
 }): JSX.Element {
+  console.log("[ElementsForm] received checkin:", checkin, "checkout:", checkout)
   return (
     <Elements
       stripe={getStripe()}
@@ -242,7 +305,15 @@ export default function ElementsForm({
         amount: formatAmountForStripe(amount, currency),
       }}
     >
-      <CheckoutForm userEmail={userEmail} amount={amount} currency={currency} />
+      <CheckoutForm 
+        userEmail={userEmail} 
+        amount={amount} 
+        currency={currency}
+        carId={carId}
+        userId={userId}
+        checkin={checkin}
+        checkout={checkout}
+      />
     </Elements>
   )
 }

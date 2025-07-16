@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next"
-import { ClerkProvider } from "@clerk/nextjs"
 
 import { Toaster } from "@/components/ui/toaster"
 
 import "../styles/globals.css"
+import { AuthProvider } from "@/app/(app)/providers/AuthProvider";
 
 import { siteConfig } from "@/config/site"
 import { fontSans } from "@/lib/fonts"
@@ -61,13 +61,12 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <ClerkProvider>
-      <html lang="en" className={fontSans.variable}>
-        <body className="flex min-h-screen flex-col">
-          {children}
-          <Toaster />
-        </body>
-      </html>
-    </ClerkProvider>
+
+    <html lang="en" className={fontSans.variable}>
+      <body className="flex min-h-screen flex-col">
+        <AuthProvider>{children}</AuthProvider>          <Toaster />
+      </body>
+    </html>
+
   )
 }

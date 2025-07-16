@@ -54,8 +54,23 @@ export const carsTable = pgTable("cars", {
     .$onUpdate(() => new Date()),
 })
 
+export const usersTable = pgTable("users", {
+  id: text("id").primaryKey().notNull(),
+  name: text("name"),
+  email: text("email").notNull().unique(),
+  role: text("role").notNull().default("user"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+});
+
 export type InsertLocation = typeof locationsTable.$inferInsert
 export type SelectLocation = typeof locationsTable.$inferSelect
 
 export type InsertCar = typeof carsTable.$inferInsert
 export type SelectCar = typeof carsTable.$inferSelect
+
+export type InsertUser = typeof usersTable.$inferInsert;
+export type SelectUser = typeof usersTable.$inferSelect;
