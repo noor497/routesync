@@ -17,8 +17,7 @@ import Car from "../../app/(models)/Car.js";
 // }
 
 export async function getCars() {
-  // Fetch from SQL
-  const sqlCars = await db.query.carsTable.findMany();
+ 
 
   // Fetch from MongoDB
   // await connectMongoose();

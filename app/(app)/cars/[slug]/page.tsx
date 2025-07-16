@@ -1,6 +1,6 @@
-import { Metadata } from "next"
+"use client"
+import { useEffect, useState } from "react"
 import { notFound } from "next/navigation"
-import { getCarBySlug, getCars } from "@/db/queries/car-repository"
 import Image from "next/image"
 
 import { convertImageUrlToDataUrl } from "@/lib/utils"
@@ -14,45 +14,79 @@ import { WifiIcon } from "@/components/icons/wifi"
 
 import { ReserveCard } from "./components/reserve-card"
 
-export async function generateMetadata({
-  params,
-}: CarDetailsPageProps): Promise<Metadata> {
-  const car: any = await getCarBySlug(params.slug)
+// export async function generateMetadata({
+//   params,
+// }: CarDetailsPageProps): Promise<Metadata> {
+//   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/cars/${params.slug}`)
+//   if (!res.ok) return {}
+//   const car = await res.json()
+//   return {
+//     title: car.name,
+//     description: car.description,
+//   }
+// }
 
-  if (!car) return {}
-
-  return {
-    title: car.name,
-    description: car.description,
-  }
-}
-
-export async function generateStaticParams() {
-  const cars = await getCars()
-  return cars.map((car) => ({ slug: car.slug }))
-}
+// export async function generateStaticParams() {
+//   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/cars`)
+//   if (!res.ok) return []
+//   const cars = await res.json()
+//   return cars.map((car: any) => ({ slug: car.slug }))
+// }
 
 interface CarDetailsPageProps {
   params: { slug: string }
 }
 
-export default async function CarDetailsPage({ params }: CarDetailsPageProps) {
-  const car: any = await getCarBySlug(params.slug)
+export default function CarDetailsPage({ params }: CarDetailsPageProps) {
+  const [car, setCar] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  if (!car) {
+  useEffect(() => {
+    async function fetchCar() {
+      setLoading(true)
+      setError(null)
+      try {
+        const res = await fetch(`/api/cars/${params.slug}`)
+        if (!res.ok) {
+          if (res.status === 404) {
+            setError("notfound")
+          } else {
+            setError("Failed to fetch car data.")
+          }
+          setCar(null)
+        } else {
+          const data = await res.json()
+          setCar(data)
+        }
+      } catch (err) {
+        setError("Failed to fetch car data.")
+        setCar(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchCar()
+  }, [params.slug])
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+  if (error === "notfound") {
     notFound()
+  }
+  if (error) {
+    return <div>{error}</div>
+  }
+  if (!car) {
+    return <div>No car data found.</div>
   }
 
   const carInteriorUrl = car.imageUrls[0]
   const carDoorPanelUrl = car.imageUrls[1]
   const carSeatUrl = car.imageUrls[2]
 
-  const [carInteriorDataUrl, carDoorPanelDataUrl, carSeatDataUrl] =
-    await Promise.all([
-      convertImageUrlToDataUrl(carInteriorUrl),
-      convertImageUrlToDataUrl(carDoorPanelUrl),
-      convertImageUrlToDataUrl(carSeatUrl),
-    ])
+  // You may want to use useEffect to convert images to data URLs if needed
 
   return (
     <main
