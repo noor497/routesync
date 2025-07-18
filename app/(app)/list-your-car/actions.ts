@@ -1,7 +1,7 @@
 "use server"
 import mongoose from "mongoose"
 import Car from "@/app/(models)/Car"
-
+import  dbConnect  from "@/lib/mongodb";
 // const MONGODB_URI = process.env.MONGODB_URI;
 // async function connectMongoose() {
 //   if (mongoose.connection.readyState === 0) {
@@ -24,7 +24,7 @@ export async function insertCarToMongo(car: {
   userEmail: string;
 }) {
   try {
-    // await connectMongoose();
+    await dbConnect();
     const doc = {
       name: car.name,
       bodyStyle: car.type,
@@ -50,7 +50,7 @@ export async function insertCarToMongo(car: {
 
 export async function getCarsByUserEmail(userEmail: string) {
   try {
-    // await connectMongoose();
+    await dbConnect();
     const cars = await Car.find({ userEmail }).sort({ createdAt: -1 }).lean();
     console.log(cars);
     return { success: true, cars };

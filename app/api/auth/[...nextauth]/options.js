@@ -4,7 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import User from "../../../(models)/User";
 // import bcrypt from "bcrypt";
 import bcrypt from "bcryptjs";
-
+import  dbConnect  from "@/lib/mongodb";
 export const options = {
   pages: {
     signIn: "/login", // Replace with your custom login page path (e.g., /login)
@@ -94,7 +94,7 @@ export const options = {
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
-
+        await dbConnect();
         // For Google sign-in
         if (account.provider === 'google') {
           // const foundUser = await User.findOne({ email: credentials.email })

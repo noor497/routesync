@@ -2,6 +2,7 @@ import User from "../../(models)/User";
 import { NextResponse } from "next/server";
 // import bcrypt from "bcrypt";
 import bcrypt from "bcryptjs";
+import  dbConnect  from "@/lib/mongodb";
 
 export async function POST(req) {
     try {
@@ -17,6 +18,7 @@ export async function POST(req) {
                 { status: 400 }
             );
         }
+        await dbConnect();
         const foundUser = await User.findOne({ email: userData.email })
             .lean()
             .exec();

@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import Car from "@/app/(models)/Car";
+import  dbConnect  from "@/lib/mongodb";
 
 export async function GET(request: Request, { params }: { params: { slug: string } }) {
   try {
     const { slug } = await params;
+    await dbConnect();
     console.log("slug in api/cars/[slug]/route.ts", slug);
     const car = await Car.findOne({ _id: slug }).lean();
     if (!car) {
