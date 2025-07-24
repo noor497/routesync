@@ -62,7 +62,7 @@ export default function ListYourCarPage() {
     fetch(`/api/ninja-city?q=${encodeURIComponent(debouncedCityQuery)}`)
       .then((res) => res.json())
       .then((data) => {
-        setCityOptions(data);
+        setCityOptions(Array.isArray(data) ? data : []);
         setCityLoading(false);
       })
       .catch(() => setCityLoading(false));
