@@ -33,6 +33,8 @@ export const bodyStyles: {
   },
   { slug: "suv", name: "SUV", icon: SUVIcon },
   { slug: "sedan", name: "Sedan", icon: CarIcon },
+  { slug: "truck", name: "Truck", icon: TruckIcon },
+  { slug: "heavy-truck", name: "Heavy Truck", icon: TruckIcon },
 ]
 
 interface BodyStyleFiltersProps {

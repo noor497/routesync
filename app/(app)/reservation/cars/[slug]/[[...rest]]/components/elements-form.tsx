@@ -159,7 +159,7 @@ function CheckoutForm({
       })
       // Create booking after payment success
       console.log("[CheckoutForm] before createBooking checkin:", checkin, "checkout:", checkout)
-      await createBooking({
+      const bookingRes = await createBooking({
         carId,
         userId,
         checkin: new Date(checkin),
@@ -167,6 +167,20 @@ function CheckoutForm({
         totalPrice: amount,
         status: "confirmed",
       })
+      if (bookingRes && bookingRes.success) {
+        toast({
+          title: "Booking confirmed!",
+          description: "Your booking has been created successfully.",
+          duration: 3000
+        });
+      } else {
+        toast({
+          title: "Booking failed",
+          description: bookingRes?.error || "Could not create booking. Please try again.",
+          variant: "destructive",
+          duration: 4000
+        });
+      }
       setIsLoading(false)
       setPayment({ status: "succeeded" })
     } catch (err) {
@@ -174,6 +188,12 @@ function CheckoutForm({
       setPayment({ status: "error" })
       const { message } = err as StripeError
       setErrorMessage(message ?? "An unknown error occurred")
+      toast({
+        title: "Payment or Booking failed",
+        description: message ?? "An unknown error occurred",
+        variant: "destructive",
+        duration: 4000
+      });
     }
   }
 

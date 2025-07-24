@@ -1,8 +1,11 @@
 "use client"
 import { carTypes } from "@/data/car-types"
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useEffect, useState } from "react"
-import { getCarsByUserEmail } from "./actions"
+import { useState, useEffect, useRef } from "react";
+import { getCarsByUserEmail } from "./actions";
+import { useDebounce } from "@/hooks/use-debounce";
+import { locations } from "@/data/locations";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ListYourCarPage() {
   const [form, setForm] = useState({
@@ -16,6 +19,9 @@ export default function ListYourCarPage() {
     features: "",
     pricePerDay: "",
     images: [] as File[],
+    location: "", // city name
+    latitude: "", // city latitude
+    longitude: "", // city longitude
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [submitting, setSubmitting] = useState(false);
@@ -29,6 +35,14 @@ export default function ListYourCarPage() {
   const [userCars, setUserCars] = useState<any[]>([]);
   const [loadingCars, setLoadingCars] = useState(false);
 
+  const [cityQuery, setCityQuery] = useState("");
+  const [cityOptions, setCityOptions] = useState<any[]>([]);
+  const [cityLoading, setCityLoading] = useState(false);
+  const debouncedCityQuery = useDebounce(cityQuery, 400);
+  const cityDropdownRef = useRef<HTMLDivElement>(null);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
+  const { toast } = useToast();
+
   useEffect(() => {
     if (userEmail) {
       setLoadingCars(true);
@@ -38,6 +52,21 @@ export default function ListYourCarPage() {
       });
     }
   }, [userEmail]);
+
+  useEffect(() => {
+    if (!debouncedCityQuery) {
+      setCityOptions([]);
+      return;
+    }
+    setCityLoading(true);
+    fetch(`/api/ninja-city?q=${encodeURIComponent(debouncedCityQuery)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setCityOptions(data);
+        setCityLoading(false);
+      })
+      .catch(() => setCityLoading(false));
+  }, [debouncedCityQuery]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value, type, checked, files } = e.target as any;
@@ -52,7 +81,7 @@ export default function ListYourCarPage() {
   }
 
   function handleSelectChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    setForm(f => ({ ...f, type: e.target.value }));
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
     setErrors({});
   }
 
@@ -67,7 +96,20 @@ export default function ListYourCarPage() {
     if (!form.features.trim()) newErrors.features = "At least one feature is required.";
     if (!form.images || form.images.length !== 3) newErrors.images = "You must upload exactly three images.";
     if (!form.pricePerDay || isNaN(Number(form.pricePerDay)) || Number(form.pricePerDay) <= 0) newErrors.pricePerDay = "Price per day must be a positive number.";
+    if (!form.location) newErrors.location = "City is required.";
+    if (!form.latitude || !form.longitude) newErrors.location = "Please select a city from the dropdown.";
     return newErrors;
+  }
+
+  function handleCitySelect(city: any) {
+    setForm((f) => ({
+      ...f,
+      location: city.name + (city.country ? ", " + city.country : ""),
+      latitude: city.latitude,
+      longitude: city.longitude,
+    }));
+    setShowCityDropdown(false);
+    setCityQuery(city.name + (city.country ? ", " + city.country : ""));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -85,6 +127,7 @@ export default function ListYourCarPage() {
       return;
     }
     setSubmitting(true);
+    toast({ title: "Uploading car...", description: "Your car is being uploaded. Please wait.", duration: 3000 });
     try {
       // Upload images to Cloudinary
       const uploadPromises = form.images.map((file) => {
@@ -116,11 +159,16 @@ export default function ListYourCarPage() {
         imageUrls,
         user: userId, // Add user id here
         userEmail: userEmail,
+        location: form.location, // pass city
+        latitude: Number(form.latitude),
+        longitude: Number(form.longitude),
       };
       const res = await (await import("./actions")).insertCarToMongo(carData as any);
       if (res.success) {
+        toast({ title: "Car uploaded!", description: "Your car listing was successfully created.", duration: 3000 });
         alert("Car listing submitted and saved to database!");
         console.log(res.car);
+        setUserCars(prev => [res.car, ...prev]);
       } else {
         setErrors({ pricePerDay: res.error || "Failed to save car." });
       }
@@ -216,6 +264,42 @@ export default function ListYourCarPage() {
             className="w-full rounded border px-3 py-2"          />
           {errors.pricePerDay && <p className="mt-1 text-sm text-red-600">{errors.pricePerDay}</p>}
         </div>
+        <div className="relative">
+          <label className="mb-1 block font-medium">City</label>
+          <input
+            name="location"
+            value={cityQuery}
+            onChange={e => {
+              setCityQuery(e.target.value);
+              setShowCityDropdown(true);
+              setForm(f => ({ ...f, location: "", latitude: "", longitude: "" }));
+            }}
+            autoComplete="off"
+            required
+            className="w-full rounded border px-3 py-2"
+            placeholder="Type to search city..."
+          />
+          {errors.location && <p className="mt-1 text-sm text-red-600">{errors.location}</p>}
+          {showCityDropdown && cityQuery && (
+            <div ref={cityDropdownRef} className="absolute z-10 mt-1 w-full rounded border bg-white shadow-lg max-h-56 overflow-y-auto">
+              {cityLoading ? (
+                <div className="p-2 text-gray-500">Loading...</div>
+              ) : cityOptions.length === 0 ? (
+                <div className="p-2 text-gray-500">No cities found.</div>
+              ) : (
+                cityOptions.map((city, idx) => (
+                  <div
+                    key={city.name + city.country + idx}
+                    className="cursor-pointer px-3 py-2 hover:bg-gray-100"
+                    onClick={() => handleCitySelect(city)}
+                  >
+                    {city.name}{city.country ? ", " + city.country : ""}
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
         <div>
           <label className="mb-1 block font-medium">Car Images <span className="text-xs text-gray-500">(exactly 3)</span></label>
           <input
@@ -230,7 +314,7 @@ export default function ListYourCarPage() {
         </div>
         <button
           type="submit"
-          className="w-full rounded bg-blue-600 py-2 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+          className="w-full rounded bg-black py-2 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
           disabled={submitting}
         >
           {submitting ? "Submitting..." : "Submit"}

@@ -11,8 +11,23 @@ import { HeadsetIcon } from "@/components/icons/headset"
 import { KidIcon } from "@/components/icons/kid"
 import { NavigationIcon } from "@/components/icons/navigation"
 import { WifiIcon } from "@/components/icons/wifi"
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { locations } from "@/data/locations";
+import L from "leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+// Fix leaflet's default icon path issues with Webpack/Next.js
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 
 import { ReserveCard } from "./components/reserve-card"
+import { CiDeliveryTruck } from "react-icons/ci";
 
 // export async function generateMetadata({
 //   params,
@@ -70,7 +85,12 @@ export default function CarDetailsPage({ params }: CarDetailsPageProps) {
   }, [params.slug])
 
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-gray-600">
+        <CiDeliveryTruck className="animate-spin-slow mb-4" size={48} />
+        <span className="text-lg font-medium">Loading car details...</span>
+      </div>
+    );
   }
   if (error === "notfound") {
     notFound()
@@ -85,8 +105,12 @@ export default function CarDetailsPage({ params }: CarDetailsPageProps) {
   const carInteriorUrl = car.imageUrls[0]
   const carDoorPanelUrl = car.imageUrls[1]
   const carSeatUrl = car.imageUrls[2]
+  const city = car.location
 
   // You may want to use useEffect to convert images to data URLs if needed
+
+  // Use coordinates from car if available
+  const hasCoords = typeof car.latitude === 'number' && typeof car.longitude === 'number' && !isNaN(car.latitude) && !isNaN(car.longitude);
 
   return (
     <main
@@ -248,8 +272,39 @@ export default function CarDetailsPage({ params }: CarDetailsPageProps) {
               </div>
             </div>
           </div>
+          {/* Show city on map if found */}
+          <div className="mt-12">
+            <h2 className="text-lg font-semibold mb-4">Car Location</h2>
+            <div className="mb-2 text-base text-neutral-700 font-medium">{car.location}</div>
+            {hasCoords ? (
+              <MapContainer
+                center={[car.latitude, car.longitude]}
+                zoom={12}
+                style={{ height: "300px", width: "100%" }}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[car.latitude, car.longitude]}>
+                  <Popup>{car.location}</Popup>
+                </Marker>
+              </MapContainer>
+            ) : (
+              <div className="text-gray-500">City coordinates not available.</div>
+            )}
+          </div>
         </div>
       </div>
+      <style jsx global>{`
+  .animate-spin-slow {
+    animation: spin 2s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`}</style>
     </main>
   )
 }

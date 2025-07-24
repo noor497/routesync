@@ -9,6 +9,7 @@ const bookingSchema = new Schema(
     checkin: { type: Date, required: true },
     checkout: { type: Date, required: true },
     totalPrice: { type: Number, required: true },
+    city: { type: String, required: true },
     status: {
       type: String,
       enum: ["pending", "confirmed", "cancelled"],

@@ -17,6 +17,9 @@ const CarSchema = new mongoose.Schema({
   status: { type: String, enum: ['active', 'disabled'], default: 'active' },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   userEmail: { type: String, required: true },
+  location: { type: String, required: true },
+  latitude: { type: Number, required: true },
+  longitude: { type: Number, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

@@ -35,6 +35,7 @@ export default async function MyBookingsPage() {
             <thead>
               <tr className="bg-gray-100">
                 <th className="border px-4 py-2 ">Car</th>
+                <th className="border px-4 py-2 ">City</th>
                 <th className="border px-4 py-2">Check-in</th>
                 <th className="border px-4 py-2">Check-out</th>
                 <th className="border px-4 py-2">Total Price</th>
@@ -45,6 +46,7 @@ export default async function MyBookingsPage() {
               {bookings.map((booking: any) => (
                 <tr key={booking._id} className="border-t">
                   <td className="border px-4 py-2">{booking.car?.name || "-"}</td>
+                  <td className="border px-4 py-2">{booking.city || "-"}</td>
                   <td className="border px-4 py-2">{new Date(booking.checkin).toLocaleDateString()}</td>
                   <td className="border px-4 py-2">{new Date(booking.checkout).toLocaleDateString()}</td>
                   <td className="border px-4 py-2">${booking.totalPrice.toFixed(2)}</td>

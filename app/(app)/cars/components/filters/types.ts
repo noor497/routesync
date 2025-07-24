@@ -14,5 +14,7 @@ export type BodyStyle =
   | "sports-car"
   | "hatchback"
   | "sedan"
+  | "truck"
+  | "heavy-truck"
 export type Powertrain = "gasoline" | "diesel" | "hybrid" | "electric"
 export type Transmission = "automatic" | "manual"

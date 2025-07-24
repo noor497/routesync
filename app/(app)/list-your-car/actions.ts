@@ -22,6 +22,9 @@ export async function insertCarToMongo(car: {
   pricePerDay: number;
   user: string; // user id
   userEmail: string;
+  location: string; // city/location slug or name
+  latitude: number;
+  longitude: number;
 }) {
   try {
     await dbConnect();
@@ -38,6 +41,9 @@ export async function insertCarToMongo(car: {
       pricePerDay: car.pricePerDay,
       user: car.user, // store user id
       userEmail: car.userEmail,
+      location: car.location, // store city/location
+      latitude: car.latitude,
+      longitude: car.longitude,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
