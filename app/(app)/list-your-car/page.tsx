@@ -59,13 +59,23 @@ export default function ListYourCarPage() {
       return;
     }
     setCityLoading(true);
+    console.log("[CityDropdown] Fetching cities for query:", debouncedCityQuery);
     fetch(`/api/ninja-city?q=${encodeURIComponent(debouncedCityQuery)}`)
-      .then((res) => res.json())
+      .then((res:any) => {
+        console.log("[CityDropdown] Response status:", res.status);
+        console.log("[CityDropdown] Response data:", res.data);
+
+        return res.json();
+      })
       .then((data) => {
+        console.log("[CityDropdown] Response data:", data);
         setCityOptions(Array.isArray(data) ? data : []);
         setCityLoading(false);
       })
-      .catch(() => setCityLoading(false));
+      .catch((err) => {
+        console.error("[CityDropdown] Fetch error:", err);
+        setCityLoading(false);
+      });
   }, [debouncedCityQuery]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
